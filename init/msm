@@ -1130,7 +1130,7 @@ jargroup_getlatest() {
                 if [[ -n "$jar_url" ]]; then
                     as_user "$SETTINGS_USERNAME" "wget --quiet $wget_opts -O '$SETTINGS_JAR_STORAGE_PATH/$1/$SETTINGS_JARGROUP_DOWNLOAD_DIR/minecraft_server.$latest_version.jar' '$jar_url'"
                 else
-                    as_user "$SETTINGS_USERNAME" "wget --quiet $wget_opts --input-file='$SETTINGS_JAR_STORAGE_PATH/$1/$SETTINGS_JARGROUP_TARGET' --directory-prefix='$SETTINGS_JAR_STORAGE_PATH/$1/$SETTINGS_JARGROUP_DOWNLOAD_DIR'"
+                    as_user "$SETTINGS_USERNAME" "wget --quiet $wget_opts --content-disposition --input-file='$SETTINGS_JAR_STORAGE_PATH/$1/$SETTINGS_JARGROUP_TARGET' --directory-prefix='$SETTINGS_JAR_STORAGE_PATH/$1/$SETTINGS_JARGROUP_DOWNLOAD_DIR'"
                 fi
 
 				echo "Done."

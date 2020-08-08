@@ -1116,21 +1116,21 @@ jargroup_getlatest() {
                     printf "Checking minecraft version JSON... "
                     local versions_url="https://launchermeta.mojang.com/mc/game/version_manifest.json"
                     local versions_file="/tmp/minecraft_versions.json"
-                    as_user "$SETTINGS_USERNAME" "wget --quiet $wget_opts --no-check-certificate -O '$versions_file' '$versions_url'"
+                    as_user "$SETTINGS_USERNAME" "wget --quiet $wget_opts -O '$versions_file' '$versions_url'"
                     local latest_package_url=$(as_user "$SETTINGS_USERNAME" "cat $versions_file | jq -r '.versions | sort_by(.releaseTime) | map(select(.type | contains ("\""$versions_target"\""))) | last | .url'")
                     local latest_version=$(as_user "$SETTINGS_USERNAME" "echo ${latest_package_url##*/} | sed s/.json//")
 
 		            if [[ -n "$latest_package_url" ]]; then
 			            local package_file="/tmp/minecraft_package.json"
-			            as_user "$SETTINGS_USERNAME" "wget --quiet $wget_opts --no-check-certificate -O '$package_file' '$latest_package_url'"
+			            as_user "$SETTINGS_USERNAME" "wget --quiet $wget_opts -O '$package_file' '$latest_package_url'"
                         local jar_url=$(as_user "$SETTINGS_USERNAME" "cat $package_file | jq -r '.downloads.server.url'")
                     fi
                 fi
 
                 if [[ -n "$jar_url" ]]; then
-                    as_user "$SETTINGS_USERNAME" "wget --quiet $wget_opts --no-check-certificate -O '$SETTINGS_JAR_STORAGE_PATH/$1/$SETTINGS_JARGROUP_DOWNLOAD_DIR/minecraft_server.$latest_version.jar' '$jar_url'"
+                    as_user "$SETTINGS_USERNAME" "wget --quiet $wget_opts -O '$SETTINGS_JAR_STORAGE_PATH/$1/$SETTINGS_JARGROUP_DOWNLOAD_DIR/minecraft_server.$latest_version.jar' '$jar_url'"
                 else
-                    as_user "$SETTINGS_USERNAME" "wget --quiet $wget_opts --no-check-certificate --input-file='$SETTINGS_JAR_STORAGE_PATH/$1/$SETTINGS_JARGROUP_TARGET' --directory-prefix='$SETTINGS_JAR_STORAGE_PATH/$1/$SETTINGS_JARGROUP_DOWNLOAD_DIR'"
+                    as_user "$SETTINGS_USERNAME" "wget --quiet $wget_opts --input-file='$SETTINGS_JAR_STORAGE_PATH/$1/$SETTINGS_JARGROUP_TARGET' --directory-prefix='$SETTINGS_JAR_STORAGE_PATH/$1/$SETTINGS_JARGROUP_DOWNLOAD_DIR'"
                 fi
 
 				echo "Done."
@@ -2193,7 +2193,7 @@ command_update() {
 	download_file() {
 		local dir_name="$(dirname "${output_dir}/${1}")"
 		as_user "${SETTINGS_USERNAME}" "mkdir -p \"${dir_name}\""
-		as_user "${SETTINGS_USERNAME}" "wget --quiet --no-check-certificate ${SETTINGS_UPDATE_URL}/$1 -O ${output_dir}/$1"
+		as_user "${SETTINGS_USERNAME}" "wget --quiet ${SETTINGS_UPDATE_URL}/$1 -O ${output_dir}/$1"
 	}
 
 	# $1: The newly download file (relative to download dir)

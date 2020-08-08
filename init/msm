@@ -620,7 +620,7 @@ server_is_running() {
 	server_property "$1" SCREEN_NAME
 	server_property "$1" INVOCATION
 
-	if ps ax | grep -v grep | grep "${SERVER_SCREEN_NAME[$1]} ${SERVER_INVOCATION[$1]}" > /dev/null
+	if ps ax | grep -v grep | grep -F "${SERVER_SCREEN_NAME[$1]} ${SERVER_INVOCATION[$1]}" > /dev/null
 	then
 		return 0
 	else
@@ -942,7 +942,7 @@ server_pid() {
 	server_property "$1" SCREEN_NAME
 	server_property "$1" INVOCATION
 
-	ps ax | grep -v grep | grep "${SERVER_SCREEN_NAME[$1]} ${SERVER_INVOCATION[$1]}" | awk '{print $1}'
+	ps ax | grep -v grep | grep -F "${SERVER_SCREEN_NAME[$1]} ${SERVER_INVOCATION[$1]}" | awk '{print $1}'
 }
 
 # Waits for a server to stop by polling 10 times a second
@@ -3197,7 +3197,7 @@ command_server_config() {
 	if [ ! -z "$2" ] && [ ! -z "$3" ]; then
 		server_property "$1" CONF
 		if [[ -f "${SERVER_CONF[$1]}" ]]; then
-			if grep "$2" "${SERVER_CONF[$1]}" >/dev/null; then
+			if grep -F "$2" "${SERVER_CONF[$1]}" >/dev/null; then
 				sed -i /$2=/s/.*/"$2=$3"/g "${SERVER_CONF[$1]}"
 			else
 				echo "$2=$3" >> "${SERVER_CONF[$1]}"
